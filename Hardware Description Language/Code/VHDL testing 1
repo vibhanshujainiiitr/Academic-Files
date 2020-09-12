@@ -1,0 +1,13 @@
+   library lib_name;
+ use lib_name.package_name.item_name;
+ entity entity-name is 
+ [port (In_1, In_2: in bit;
+	out_1, out_2: out bit;
+	inout_1,inout_2: inout bit;]
+ end [entity][entity-name];
+ architectture arch-name of entity entity-name is
+	[declaration]
+ begin
+   architecture body
+ end [architecture][arch-name];
+
