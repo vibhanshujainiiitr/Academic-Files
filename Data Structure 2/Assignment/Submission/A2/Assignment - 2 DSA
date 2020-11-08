@@ -1,0 +1,250 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+// Defining the node for the BST which will store the character, pointer to left child, right child and it's parent 
+typedef struct node
+{
+    char data[7];
+    struct node* left;
+    struct node* right;
+    struct node* parent;
+} node ;
+
+// Initialising the head to the NULL, so as to start the BST
+node *head = NULL;
+node*  predecessor = NULL;
+node* successor = NULL;
+// Function for creating the new node for the BST with the character given as the data stored
+node* newnode( char data[7] )
+{
+    node *temp;
+    temp = (node *)malloc(sizeof(node));
+    strcpy(temp->data, data);
+    temp->left = NULL;
+    temp->right = NULL;
+    temp->parent = NULL;
+    return temp;
+};
+
+// Comparing the two given strings, this funtion will return, 1 if first string is lesser then second, and 0 if is opposite. It will return -1 if both the strings are same. 
+int compare_plate(char Plate_1[7], char Plate_2[7] )
+{
+    for( int i=0; i<=7; i++ )
+        {
+            if(Plate_1[i] > Plate_2[i])
+                {   
+                    return 0;
+                }
+            if(Plate_1[i] < Plate_2[i])
+                {
+                    return 1;
+                }    
+        }
+    return -1;
+}
+
+// Inserting the character given in the BST 
+struct node* insert (node *node, char key[7] )
+{
+    if(node==NULL)
+        return newnode(key);
+
+    if(compare_plate( key, node->data))
+        {
+            struct node *test;
+            test = insert(node->left, key);
+            node->left = test;
+            test->parent = node;
+        }
+
+    else if(!compare_plate( key, node->data))
+        {
+            struct node *test;
+            test = insert(node->right, key);
+            node->right = test;
+            test->parent = node;
+        }
+    return node;
+};
+
+
+// Inorder Traversal 
+
+void inorder(node *root)
+{
+    if(root == NULL)
+        return;
+    inorder(root->left);
+    printf("%s ",root->data);
+    inorder(root->right);
+}
+
+// The search funtion which will output 1 if the string is present there and 0 if the string is not present there.
+int search( node* root, char key[7])
+{   
+    int count = 0;
+    if(root == NULL)
+        return count;
+        
+    if(compare_plate(root->data, key) == -1)
+        {   
+            count = 1;
+            return count;
+        }    
+    
+    if(compare_plate( key, root->data))
+        {
+        
+        
+        return search( root->left, key);
+        }
+    
+    return search( root->right, key );
+}
+
+
+// The funtion to print the path needed to go to the searched string
+void search_path( node* root, char key[7])
+{   
+    if( search(head, key)==0)
+        return;
+    if(root == NULL)
+        return;
+        
+    if(compare_plate(root->data, key) == -1)
+        {   
+            return;
+        }    
+    
+    if(compare_plate( key, root->data))
+        {
+        printf("L");
+        return search_path( root->left, key);
+        }
+    else
+        {
+        printf("R");
+        return search_path( root->right, key );
+        }
+}
+
+// Function to delete the BSt so that we can use the space allotted again.
+void delete_bst(node* root )
+{
+    if(root == NULL)
+        return;
+    
+    // Deleting the both subtrees
+    delete_bst(root->right);
+    delete_bst(root->left);
+    
+    //Then deleting the root 
+    free(root);
+}
+
+
+// Finding the successor and predecessor of the BST 
+
+void find (node* root, char key[7], node* succ, node* pred )
+{
+    // For the base case
+    if ( root == NULL )
+        return;
+    
+    // If the root element is the key
+    if (compare_plate(root->data, key ) == -1 )
+    {
+        // The maximum element lies in the left subtree
+        if( root->left != NULL)
+        {
+            node* temp = root->left;
+            while( temp->right)
+            {
+                temp = temp->right;
+            }
+            pred = temp;
+        }
+        
+        // The minimun value lies in the right subtree
+        if ( root->right != NULL)
+        {
+            node* temp = root->right;
+            while(temp->left)
+            {
+                temp = temp->left;
+            }
+            succ = temp;
+        }
+    
+    if ( compare_plate(key, root->data))
+        {
+            succ = root;
+            find( root->left, key, succ, pred );
+        }
+        
+    }
+}
+
+int main()
+{
+    char choice, numberPlate[7];
+    _Bool requests = 0;
+    // Fetching till we hit the first request
+    while(scanf("%s",numberPlate)!=-1)
+        {
+            if(!requests)
+            {
+                if(strlen(numberPlate) == 1)  // Detecting start of request lines.
+                    { 
+                        choice = numberPlate[0];
+                        requests = 1;
+                    }
+                else
+                    {
+                        // *** Call your insert function here with argument numberPlate ***
+                        head = insert(head, numberPlate);    
+                    }
+            }
+            
+            else break; // choice and numberPlate have values to be processed!!
+        }
+        
+        inorder(head);
+    do{ // Ugly do-while to process first request line before first scanf.
+        if(choice == 'S')
+        {
+                    //*** Call your search function here with argument numberPlate ***
+            printf("%d ",search(head, numberPlate));
+            search_path(head,numberPlate);
+            printf("\n");        
+        }
+        
+        else if(choice == '<')
+        {
+                    //*** Call your predecessor function here with argument numberPlate ***
+                    find(head, numberPlate, successor, predecessor);
+                    if ( predecessor != NULL )
+                        printf("%s\n", predecessor->data);
+                    else 
+                        printf("0\n");
+        }
+        else if(choice == '>')
+        {
+                    //*** Call your successor function here with argument numberPlate ***
+                    find(head, numberPlate, successor, predecessor);
+                    if ( successor != NULL )
+                        printf("%s\n", successor->data);
+                    else 
+                        printf("0\n");
+        }   
+    }
+    
+    while(scanf("%*[\n]%c %6s",&choice, numberPlate)!=-1);
+
+     // Function to delete the BST so that we can release the space blocked by malloc function.
+    delete_bst(head);
+ 
+    
+    return(0);
+}
