@@ -17,11 +17,24 @@ int min(int a, int b)
 }
 
 
-
-const char* scs( char a[], char b[], char sequence[])
+int main()
 {
-    int n = strlen(a);
-    int m = strlen(b);
+    // length of the two strings that will be given by the user as input.
+    int len1, len2;
+    printf("Please input the length of the strings\n");
+    scanf("%d %d", &len1, &len2);
+    
+    char a[len1];
+    char b[len2];
+    
+    // Inputing the two strings. 
+    printf("Enter the strings\n");
+    scanf("%s",b);
+    scanf("%s",a);
+    
+    
+    int n = len1;
+    int m = len2;
     
     int key[n+1][m+1];
     // The 2D ay to store the length.
@@ -43,67 +56,49 @@ const char* scs( char a[], char b[], char sequence[])
     }
     
     int index = key[m][n], count = 0;
+    char sequence[index]; 
     
     int i = m , j = n ;
+    index--;
     while ( i > 0 && j > 0)
     {
-        
         if ( a[i-1] == b[j-1] )
-        {
-            sequence[count] = a[i-1];
-            count++;
+        {   
+            sequence[index] = a[i-1];
             i--, j--, index--; 
+            printf("Hello 1");
         }
         
         else if (key[i-1][j] > key[i][j-1])
         {
-            sequence[count] = b[j-1];
-            count++;
+            sequence[index] = b[j-1];
             j--; index--;
+            printf("Hello 2");
         }
         
         else
         {
-            sequence[count] = a[i-1];
-            count++;
+            sequence[index] = a[i-1];
             i--; index--;
         }
     }
     
     while ( i>0)
     {
-        sequence[count] = a[i-1];
-        count++;
+        sequence[index] = a[i-1];
         i--, index--;
     }
     
     while(j>0)
     {
-        sequence[count] = b[j-1];
-        count++;
+        sequence[index] = b[j-1];
         j--; index--;
     }
     
-    return sequence;
-}
-
-int main()
-{
-    // length of the two strings that will be given by the user as input.
-    int len1, len2;
-    printf("Please input the length of the strings\n");
-    scanf("%d %d", &len1, &len2);
     
-    char a[len1];
-    char b[len2];
+    printf("The SCS of the given two strings are %s\n", sequence);
     
-    // Inputing the two strings. 
-    printf("Enter the strings\n");
-    scanf("%s %s", a, b);
-    
-    char sequence[len1+len2];
-  //  printf("The SCS of the given two strings are %s", scs(a,b,sequence));
-    
-    printf("The strings entered by you are: %s %s", a,b);
+    printf("The strings entered by you are: %s %s",a,b);
     return 0;
 }
+

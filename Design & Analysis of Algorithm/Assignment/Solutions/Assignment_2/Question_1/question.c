@@ -33,20 +33,24 @@ int main()
     
     temp[0][0] = A[0][0];                               // The temp value of the first element is the value itself as it doesn't have any previous element.
     
-    for( int k = 1; k<m; k++)                           // The temp value of the element in last row will be initialised seperately as they don't have bottom elements
+
+
+    for( int i=0; i<m; i++)
     {
-        temp[k][0] = temp[k-1][0] + A[k][0];
-     	result[k][0] = 0;
-    }
-    for( int k = 1; k<n; k++)                           // The temp value of the element in last column will be initialised seperately as they don't have left elements
-    {
-        temp[0][k] = temp[0][k-1] + A[0][k];
-     	result[0][k] = 1;	
-    }
-    for( int i= 1; i<m; i++)
-    {
-        for(int j=1; j<n; j++)
-        {
+        for(int j=0; j<n; j++)
+        {	
+     	    if(i==0)					 // The temp value of the element in last column will be initialised seperately as they don't have left elements
+     	    {
+     	    	temp[i][j] = A[i][j] + temp[i][j-1];
+     	    	result[i][j] = 1;
+     	    } 
+     	    
+     	    if(j==0)                                    // The temp value of the element in last row will be initialised seperately as they don't have bottom elements
+     	    {
+     	    	temp[i][j] = A[i][j] + temp[i-1][j];
+     	    	result[i][j] = 0;
+     	    }  	
+        
             if(temp[i][j-1] > temp[i-1][j])             // If bottom element is chosen then the sum will maximize
             {
                 temp[i][j] = temp[i][j-1] + A[i][j];
@@ -69,31 +73,34 @@ int main()
     }
     
     printf("The maximum sum possible is %d, the path choosen is \n",temp[m-1][n-1]);
-     int i = m-1, j = n-1;
-    while(i > 0 && j > 0) 
+    
+    
+// Trying to print the path taken to reach the maximum sum    
+ 
+/*    int i = m, j = n;
+    while(i > 0 || j > 0) 
     {
        if(result[i][j] == 0)
        {
-	 printf("this is for testing 1");
+	 printf("test_1");
 	 printf("->%d", A[i][j]);
 	 j--;
 	}
        if(result[i][j] == 1)
        {
-	       printf("this is for testing 2");
+	       printf("test_2");
 	       printf("->%d", A[i][j]);
 	       i--;
         }
     }
   	
-/*	for( int i =0 ; i<m; i++)
+	for( int i =0 ; i<m; i++)
 	{
 		for(int j=0 ; j<n; j++)
 		{
 			printf("%d	", result[i][j]);
 		}
 	}
-  
 */
 	return 0;
 }
