@@ -102,8 +102,23 @@ void DFS( struct graph* G, int key )
     }
 }
 
-/* Queue Implementation */
-    typedef struct queue_node
+
+/* BFS Algorithm Starts */
+void BFS (struct graph* Graph, int key )
+{
+    struct Queue* Queue = createQueue();
+
+    Graph->state = visited;
+    enQueue(Queue,key);
+
+    while(!isEmpty(Queue))
+    {
+
+    }
+}
+
+/* Queue Implementation /
+    struct queue_node
     {
         int key;
         struct queue_node* next;
@@ -160,6 +175,25 @@ void DFS( struct graph* G, int key )
             q->end = NULL;
 
         free(temp);
+    }
+
+    int isEmpty(struct* Queue Q)
+    {
+        return(Q->front == Q->end);
+    }
+
+    void print_queue(struct Queue* Queue)
+    {
+        struct queue_node* temp = Queue->front;
+
+        while(temp->next != NULL)
+        {
+            printf(" %d ", temp->key);
+            temp = temp->next;
+        }
+        printf("\n");
+        return;
+
     }
 /* Queue list implementation ended */
 
