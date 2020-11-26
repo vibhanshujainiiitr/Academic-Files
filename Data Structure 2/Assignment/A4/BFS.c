@@ -4,6 +4,83 @@
 #define visited 1
 #define notvisited 0
 
+
+
+/* Queue Implementation */
+
+struct Q_node
+{
+    int data;
+    struct Q_node* next;
+    struct Q_node* prev;
+};
+
+struct queue
+{
+    struct Q_node *front, *rear;
+};
+
+struct Q_node* new_node_queue( int k )
+{
+    struct Q_node* temp = (struct Q_node*)malloc(sizeof(struct Q_node));
+    temp->data = k;
+    temp->next = NULL;
+    temp->prev = NULL;
+    return temp;
+}
+
+struct queue* create_queue()
+{
+    struct queue* temp = (struct queue*)malloc(sizeof(struct queue));
+    temp->front = NULL;
+    temp->rear = NULL;
+    return temp;
+}
+
+void enqueue( struct queue* Queue, int k )
+{
+    struct Q_node* temp = new_node_queue(k);
+
+    if(Queue->rear == NULL)
+    {
+        Queue->front = Queue->rear = temp;
+        return;
+    }
+
+    Queue->rear->next = temp;
+    temp->prev = Queue->rear;
+    Queue->rear = temp;
+    return;
+}
+
+void dequeue(struct queue* Queue)
+{
+    if(Queue->front == NULL)
+        return;
+
+    struct Q_node* temp = Queue->front;
+
+    Queue->front = Queue->front->next;
+
+    if(Queue->front == NULL)
+        Queue->rear = NULL;
+    else
+        Queue->front->prev = NULL;
+
+    free(temp);
+    return;
+}
+
+int isEmpty(struct queue* Queue)
+{
+    return(Queue->front == Queue->rear);
+}
+
+
+/* Queue list implementation ended */
+
+
+
 /* Implementing the graph data structure using adjacency list */
 
 // The node to store the values
@@ -83,6 +160,7 @@
 
 
 /* DFS Algorithm starts */
+
 void DFS( struct graph* G, int key )
 {
     struct node* AdjList = G->adj_list[key];
@@ -106,96 +184,37 @@ void DFS( struct graph* G, int key )
 /* BFS Algorithm Starts */
 void BFS (struct graph* Graph, int key )
 {
-    struct Queue* Queue = createQueue();
+    struct queue* Queue = create_queue();
 
-    Graph->state = visited;
-    enQueue(Queue,key);
+    Graph->state[key] = visited;
+    enqueue(Queue,key);
 
     while(!isEmpty(Queue))
     {
+        int curr = Queue->front;
+        dequeue(Queue);
 
+        printf("Visited Vertex : %d", curr);
+
+        struct node* temp = Graph->adj_list[curr];
+
+        while(temp)
+        {
+            int vertex = temp->vertex;
+
+            if(Graph->state[vertex] == 0)
+            {
+                Graph->state[vertex] = visited;
+                enqueue(Queue,vertex);
+            }
+
+            temp = temp->next;
+        }
     }
 }
 
-/* Queue Implementation /
-    struct queue_node
-    {
-        int key;
-        struct queue_node* next;
-        struct queue_node* prev;
-    } queue_node;
+/* BFS Ended */
 
-    struct Queue
-    {
-        struct queue_node *front, *end;
-    } Queue;
-
-    struct queue_node* Newnode(int key)
-    {
-        struct queue_node* temp = (struct queue_node*)malloc(sizeof(struct queue_node));
-        temp->key = key;
-        temp->prev = NULL;
-        temp->next = NULL;
-        return temp;
-    }
-    struct Queue* createQueue()
-    {
-        struct Queue* new_queue = (struct Queue*)malloc(sizeof(struct Queue));
-        new_queue->front = NULL;
-        new_queue->end = NULL;
-        return new_queue;
-    }
-
-    void enQueue(struct Queue* q, int k )
-    {
-        struct queue_node*  temp = Newnode(k);
-
-        if(q->front == NULL)
-        {
-            q->front = q->end = temp;
-            return;
-        }
-
-        q->end->next = temp;
-        temp->prev = q->end;
-        q->end = temp;
-        return;
-    }
-
-    void delete_queue(struct Queue* q)
-    {
-        if(q->front == NULL)
-            return;
-
-        struct queue_node* temp = q->front;
-        q->front = q->front->next;
-        q->front->prev = NULL;
-
-        if(q->front == NULL)
-            q->end = NULL;
-
-        free(temp);
-    }
-
-    int isEmpty(struct* Queue Q)
-    {
-        return(Q->front == Q->end);
-    }
-
-    void print_queue(struct Queue* Queue)
-    {
-        struct queue_node* temp = Queue->front;
-
-        while(temp->next != NULL)
-        {
-            printf(" %d ", temp->key);
-            temp = temp->next;
-        }
-        printf("\n");
-        return;
-
-    }
-/* Queue list implementation ended */
 
 int main()
 {
@@ -206,6 +225,10 @@ int main()
     new_edge(New, 1 , 2);
 
     print(New);
+
+    BFS(New, 2);
+
+    printf("\n\n");
 
     DFS(New, 2);
     return 0;

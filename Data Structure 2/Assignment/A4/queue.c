@@ -64,6 +64,10 @@ void dequeue(struct queue* Queue)
     return;
 }
 
+int isEmpty(struct queue* Queue)
+{
+    return(Queue->front == Queue->rear);
+}
 
 int main()
 {
@@ -78,8 +82,9 @@ int main()
     dequeue(q);
     dequeue(q);
     dequeue(q);
-    printf("Queue Front : %d \n", q->front->data);
-    printf("Queue Rear : %d", q->rear->data);
+    printf("%d", isEmpty(q));
+   // printf("Queue Front : %d \n", q->front->data);
+   // printf("Queue Rear : %d", q->rear->data);
 
     return 0;
 }
