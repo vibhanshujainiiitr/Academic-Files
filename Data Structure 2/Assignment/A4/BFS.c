@@ -191,10 +191,10 @@ void BFS (struct graph* Graph, int key )
 
     while(!isEmpty(Queue))
     {
-        int curr = Queue->front;
+        int curr = Queue->front->data;
         dequeue(Queue);
 
-        printf("Visited Vertex : %d", curr);
+        printf("%d ", curr);
 
         struct node* temp = Graph->adj_list[curr];
 
@@ -215,22 +215,64 @@ void BFS (struct graph* Graph, int key )
 
 /* BFS Ended */
 
+int main(){
+  char choice;
+  int numberOfVertices, startVertex, endVertex;
 
+  // Fetching number of vertices
+  scanf("%d",&numberOfVertices);
+  // Create your adjacency list's array of head vertices here.
+  struct graph* New = create_graph(numberOfVertices);
+
+  while(scanf(" %c",&choice)!=-1){
+     if(choice == 'N'){
+       char delimiter;
+       scanf("%d", &startVertex);
+       while(scanf("%d%c", &endVertex, &delimiter)){
+
+	 // Add the edge (startVertex, endVertex) to your graph here.
+        new_edge(New, endVertex,startVertex);
+	 if(delimiter == '\n') break; // Detecting end of line.
+       }
+     }
+     else if(choice == 'B'){
+       scanf("%d",&startVertex);
+       // Call BFS on your graph starting from startVertex here.
+       BFS(New, startVertex);
+     }
+   }
+   return(0);
+}
+
+/*
 int main()
 {
-    struct graph* New = create_graph(4);
-    new_edge(New, 0, 1);
-    new_edge(New, 0, 2 );
-    new_edge(New, 0, 3);
-    new_edge(New, 1 , 2);
+    int num_vertices;
+    scanf("%d", &num_vertices);
+    struct graph* New = create_graph(num_vertices);
 
-    print(New);
+    char choise;
+    int curr_vertex = 0, temp ;
 
-    BFS(New, 2);
+    while(scanf("%s",&choise)!= -1)
+    {
+        if(choise == 'N')
+        {
+            while(scanf("") != EOF)
+            {
+                scanf("%d",&temp);
+                new_edge(New, curr_vertex,temp);
+            }
+            curr_vertex++;
+        }
+        else if(choise == 'B')
+        {
+            scanf("%d", &temp);
+            BFS(New, temp);
+        }
+    }
 
-    printf("\n\n");
-
-    DFS(New, 2);
     return 0;
 }
 
+*/
