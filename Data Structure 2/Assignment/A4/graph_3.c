@@ -4,10 +4,6 @@
 #define visited 1
 #define notvisited 0
 
-
-
-/* Queue Implementation */
-
 struct Q_node
 {
     int data;
@@ -77,13 +73,9 @@ int isEmpty(struct queue* Queue)
     if(Queue->front == NULL)
         return 1;
 
-    return 0;
+    return(0);
 }
-
-
-/* Queue list implementation ended */
-
-
+/* Queue Implementation ended here */
 
 /* Implementing the graph data structure using adjacency list */
 
@@ -92,6 +84,7 @@ int isEmpty(struct queue* Queue)
     {
         int vertex;
         struct node* next;
+        int state;
     };
     // Creating a new node by allocating memory using malloc
     struct node* createnode (int k )
@@ -106,7 +99,6 @@ int isEmpty(struct queue* Queue)
     {
         int num_vertex;
         struct node** adj_list;
-        int* state;
     };
 
     // Creating a graph
@@ -125,7 +117,6 @@ int isEmpty(struct queue* Queue)
         for( int i=0; i<vertices; i++)
         {
             new_graph->adj_list[i] = NULL;
-            new_graph->state = notvisited;
         }
 
         return new_graph;
@@ -164,67 +155,24 @@ int isEmpty(struct queue* Queue)
 /* Graph Data Structure implementation ended */
 
 
-/* DFS Algorithm starts */
-
-void DFS( struct graph* G, int key )
+/* BFS Implementation start */
+void BFS( struct graph* Graph, int key )
 {
-    struct node* AdjList = G->adj_list[key];
-    struct node* temp = AdjList;
-
-    G->state[key] = visited;
-    printf("Visited %d \n", key);
-
-    while(temp != NULL)
-    {
-        int count = temp->vertex;
-
-        if(G->state[count] == notvisited )
-            DFS(G, count);
-
-        temp = temp->next;
-    }
-}
-
-
-/* BFS Algorithm Starts */
-void BFS (struct graph* Graph, int key )
-{
-    struct queue* Queue = create_queue();
-
-    Graph->state[key] = visited;
-    enqueue(Queue,key);
-
-    printf("Testing 1\n");
-
-    while(!isEmpty(Queue))
-    {
-        int curr = Queue->front->data;
-        dequeue(Queue);
-
-        printf("Testing 2\n");
-//        fplush(stdout);
-
-        struct node* temp = Graph->adj_list[curr];
-
-        while(temp)
+    // Making the initial values of all as unvisited
+    for( int i = 0; i < Graph->num_vertex; i++)
         {
-            int vertex = temp->vertex;
-
-            if(Graph->state[vertex] == 0)
+            struct node* temp = Graph->adj_list[i];
+            Graph->adj_list[i]->state = notvisited;
+            while(temp)
             {
-                Graph->state[vertex] = visited;
-                enqueue(Queue,vertex);
+                temp->state = notvisited;
+                temp = temp->next;
             }
-
-            printf("%d ", temp->vertex);
-            temp = temp->next;
         }
-    }
 
-    printf("\n");
 }
 
-/* BFS Ended */
+/* BFS Implementation ends here */
 
 int main(){
   char choice;
@@ -252,5 +200,6 @@ int main(){
        BFS(New, startVertex);
      }
    }
+
    return(0);
 }

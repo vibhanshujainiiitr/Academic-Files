@@ -4,8 +4,6 @@
 #define visited 1
 #define notvisited 0
 
-
-
 /* Queue Implementation */
 
 struct Q_node
@@ -67,9 +65,9 @@ int dequeue(struct queue* Queue)
     else
         Queue->front->prev = NULL;
 
-    int data = temp->data;
+    int value = temp->data;
     free(temp);
-    return data;
+    return value;
 }
 
 int isEmpty(struct queue* Queue)
@@ -91,6 +89,7 @@ int isEmpty(struct queue* Queue)
     struct node
     {
         int vertex;
+        int state;
         struct node* next;
     };
     // Creating a new node by allocating memory using malloc
@@ -99,6 +98,7 @@ int isEmpty(struct queue* Queue)
         struct node* temp = (struct node*)malloc(sizeof( struct node));
         temp->vertex = k;
         temp->next = NULL;
+        temp->state = notvisited;
         return temp;
     }
     // The graph data type
@@ -106,7 +106,6 @@ int isEmpty(struct queue* Queue)
     {
         int num_vertex;
         struct node** adj_list;
-        int* state;
     };
 
     // Creating a graph
@@ -117,15 +116,9 @@ int isEmpty(struct queue* Queue)
         new_graph->num_vertex = vertices;
         new_graph->adj_list = malloc(vertices * sizeof(struct node*));
 
-        // Storing a new integer to store wether is visited or not
-        new_graph->state = malloc(vertices * sizeof(int));
-
-
-
         for( int i=0; i<vertices; i++)
         {
             new_graph->adj_list[i] = NULL;
-            new_graph->state = notvisited;
         }
 
         return new_graph;
@@ -137,12 +130,14 @@ int isEmpty(struct queue* Queue)
         struct node* temp = createnode(i);
         temp->next = graph->adj_list[k];
         graph->adj_list[k] = temp;
+
         // Adding edge from i->k
         // This part is being removed
 
-        struct node* test = createnode(k);
+/*        struct node* test = createnode(k);
         test->next = graph->adj_list[i];
         graph->adj_list[i] = test;
+*/
     }
 
 
@@ -152,79 +147,64 @@ int isEmpty(struct queue* Queue)
         for( int i = 0; i < graph->num_vertex; i++)
         {
             struct node* temp = graph->adj_list[i];
-            printf("\n Vertex %d\n", i);
+            printf("Vertex %d: ", i);
             while(temp)
             {
-                printf("%d-> ", temp->vertex);
+                printf("%d ", temp->vertex);
                 temp = temp->next;
             }
+            printf("\n");
         }
         printf("\n");
     }
 /* Graph Data Structure implementation ended */
 
 
-/* DFS Algorithm starts */
+/* BFS Started */
 
-void DFS( struct graph* G, int key )
+void BFS( struct graph* Graph, int key )
 {
-    struct node* AdjList = G->adj_list[key];
-    struct node* temp = AdjList;
-
-    G->state[key] = visited;
-    printf("Visited %d \n", key);
-
-    while(temp != NULL)
+    // Setting all the initial state to be unvisited for each vertex
+    for(int i = 0; i < Graph->num_vertex; i++)
     {
-        int count = temp->vertex;
-
-        if(G->state[count] == notvisited )
-            DFS(G, count);
-
-        temp = temp->next;
+        Graph->adj_list[i]->state = notvisited;
     }
-}
 
+    // Setting the current node as visited
+    Graph->adj_list[key]->state = visited;
 
-/* BFS Algorithm Starts */
-void BFS (struct graph* Graph, int key )
-{
+    // Creating a empty queue
     struct queue* Queue = create_queue();
 
-    Graph->state[key] = visited;
-    enqueue(Queue,key);
+    // Enqueuing the current element
+    enqueue(Queue, key);
 
-    printf("Testing 1\n");
-
+    // Running the while loop
     while(!isEmpty(Queue))
     {
-        int curr = Queue->front->data;
-        dequeue(Queue);
+        int temp = dequeue(Queue);
 
-        printf("Testing 2\n");
-//        fplush(stdout);
-
-        struct node* temp = Graph->adj_list[curr];
-
-        while(temp)
+        struct node* curr = Graph->adj_list[temp];
+        // Running the loop till the adj_list becomes empty
+        while(curr != NULL)
         {
-            int vertex = temp->vertex;
-
-            if(Graph->state[vertex] == 0)
+            if(curr->state == notvisited)
             {
-                Graph->state[vertex] = visited;
-                enqueue(Queue,vertex);
+                // If the curr node is not visited previously
+                curr->state = visited;
+                enqueue(Queue, curr->vertex);
+                printf("%d ", curr->vertex);
+                curr = curr->next;
             }
-
-            printf("%d ", temp->vertex);
-            temp = temp->next;
         }
     }
 
-    printf("\n");
+    return;
 }
 
 /* BFS Ended */
+
+
 
 int main(){
   char choice;
@@ -252,5 +232,6 @@ int main(){
        BFS(New, startVertex);
      }
    }
+
    return(0);
 }

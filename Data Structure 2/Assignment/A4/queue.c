@@ -46,7 +46,7 @@ void enqueue( struct queue* Queue, int k )
     return;
 }
 
-void dequeue(struct queue* Queue)
+int dequeue(struct queue* Queue)
 {
     if(Queue->front == NULL)
         return;
@@ -60,13 +60,17 @@ void dequeue(struct queue* Queue)
     else
         Queue->front->prev = NULL;
 
+    int data = temp->data;
     free(temp);
-    return;
+    return data;
 }
 
 int isEmpty(struct queue* Queue)
 {
-    return(Queue->front == Queue->rear);
+    if(Queue->front == NULL)
+        return 1;
+
+    return(0);
 }
 
 int main()
@@ -74,14 +78,18 @@ int main()
     struct queue* q = create_queue();
     enqueue(q, 10);
     enqueue(q, 20);
-    dequeue(q);
-    dequeue(q);
+    printf("        %d \n",dequeue(q));
+  //  printf("%d\n", isEmpty(q));
     enqueue(q, 30);
+    printf("        %d \n",dequeue(q));
     enqueue(q, 40);
+   // printf("%d\n", isEmpty(q));
     enqueue(q, 50);
-    dequeue(q);
-    dequeue(q);
-    dequeue(q);
+    printf("        %d \n",dequeue(q));
+    printf("        %d \n",dequeue(q));
+    printf("        %d \n",dequeue(q));
+    printf("        %d \n",dequeue(q));
+    printf("        %d \n",dequeue(q));
     printf("%d", isEmpty(q));
    // printf("Queue Front : %d \n", q->front->data);
    // printf("Queue Rear : %d", q->rear->data);
