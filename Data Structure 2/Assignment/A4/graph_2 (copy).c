@@ -169,20 +169,12 @@ void new_edge( struct graph* Graph, int a, int b)
 
     // If the there is no element in adjacency list of a
 
-    else if( Graph->array[a].head == NULL)
+    if( Graph->array[a].head == NULL)
     {
         // Adding the element to the adjacency list
         Graph->array[a].head = X;
     }
-
-    // If the there is no element in adjacency list of b
-    else if( Graph->array[b].head == NULL)
-    {
-        // Adding the element to the adjacency list
-        Graph->array[b].head = Y;
-    }
-
-    else if ( Graph->array[a].head != NULL)
+    else
     {
         // Inputing the value in the adjacency list of a
 
@@ -220,6 +212,15 @@ void new_edge( struct graph* Graph, int a, int b)
         }
     }
 
+
+
+    // If the there is no element in adjacency list of b
+    if( Graph->array[b].head == NULL)
+    {
+        // Adding the element to the adjacency list
+        Graph->array[b].head = Y;
+    }
+
     else
     {
         // Inputing the value in the adjacency list of b
@@ -231,7 +232,7 @@ void new_edge( struct graph* Graph, int a, int b)
             X->next = alpha;
             Graph->array[b].head = X;
         }
-
+        // Traverse the list and find the position where it can be inserted
         else
         {
             struct node* beta = Graph->array[b].head;
