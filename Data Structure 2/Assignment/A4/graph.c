@@ -55,12 +55,15 @@
         struct node* temp = createnode(i);
         temp->next = graph->adj_list[k];
         graph->adj_list[k] = temp;
+
         // Adding edge from i->k
         // This part is being removed
 
         struct node* test = createnode(k);
         test->next = graph->adj_list[i];
         graph->adj_list[i] = test;
+
+        printf("This is the node from %d - >\n", graph->adj_list[k]->vertex);
     }
 
 
