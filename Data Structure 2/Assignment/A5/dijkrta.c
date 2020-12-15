@@ -1,5 +1,5 @@
 /*
-Assignment 4
+Assignment 5
 Roll Number: CS19B1027
 Name: Vibhanshu Jain
 */
@@ -8,6 +8,7 @@ Name: Vibhanshu Jain
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define notvisited 0
 #define visited 1
@@ -95,6 +96,10 @@ int isEmpty(struct queue* Queue)
 // The node of graph
 struct node
 {
+    int weight;
+    // To store the weight
+
+
     int data;
     int state;                  // To store the current state of the node
     struct node* next;
@@ -346,6 +351,125 @@ void BFS( struct graph* Graph, int key)
 }
 
 /*===========---- BFS algorithm implementation Ended ------========*/
+
+
+
+/* ========---- The min heap -----===============*/
+struct heap{
+};
+struct heap* createheap(int size);
+// Creating a new heap
+void insertHeap(int vertex, int weight , struct heap* temp);
+// Inserting into the heap
+int isEmptyHeap(struct heap* temp);
+// To check wether the heap is empty or not
+int peekMinimum(struct heap* temp);
+/*===========----- Dijkstaras Algorithm ------===================*/
+int popMinimum (struct heap* temp);
+// We will min heaps in the implementation
+int isPresent(int vertex, struct heap* temp);
+// Will return true if the vertex is already present in the heap
+
+void dijkrata( int start, int end, struct *graph Gph)
+{
+    // Checking whether the inputed endpoints are correct or not.
+    if(start < 0 || start > Gph->num_vertex)
+        return;
+    if(end < 0 || end  > Gph->num_vertex )
+        return;
+
+    // Total number of verticess
+    int  n = Gph->num_vertex;
+
+    // Creating the heap of size of vertiecs
+    struct heap alpha = createheap(n);
+
+    // Insert the first vertex
+    insertHeap(start , 0);
+
+    // The array to store the minimun distance distance
+    // The array to store wether it's visited or not :visit
+    // The array to store the path : prevoius
+    int distance[n], visit[n], previous[n];
+
+    for( int i = 0; i < n; i++)
+    {
+        visit[i] = notvisited ;
+        distance[i] = INT_MAX;
+        previous[i] = -1;
+    }
+
+    // The distance of first element is 0
+    distance[start] = 0;
+
+    while( !isEmptyHeap())
+    {
+        // Run this while loop until the heaps is empty
+
+        int nodeID = peekMinimum(alpha);
+        visit[nodeID] = 1;
+        // Marking the node as visited
+
+        int minValue = popMinimum(alpha);
+
+
+        if(minValue > distance[nodeID])
+            continue;
+        // The distance already founded is minimum , then we don't needed to go inside the loop
+
+        struct node* temp = Gph->array[nodeID];
+        while( temp->next != NULL)
+        {
+            // If the node is already visited then continue the loop without going into the loop;
+            if(visit[nodeID])
+                continue;
+
+            // The new weight
+            int newWeight = distance[nodeID] + temp->weight;
+
+            if( newWeight < distance[temp->next->data])
+            {
+                previous[temp->next->data] = nodeID;
+                // Storing to print the path
+                distance[temp->next->data] = newWeight;
+                // Changing the weight
+
+                if(!isPresent(temp->next->data), alpha)
+                    insertHeap(temp->next->data, newWeight, alpha );
+                // Adding the vertex to the heap if it's not present here
+
+                else
+                    decreaseHeap(temp->next->data, newWeight, alpha);
+
+                // If the vertex is not present previously in the heap
+            }
+
+            // Checking for the next node in the adj list
+            temp = temp->next;
+
+        }
+
+
+        // The condition to breake the loop once we find the path between the two vertices
+        if( nodeID == end )
+        {
+            // Printing the minimun distance
+            printf("%d", distance[end]);
+
+            // Printing the path
+            for( int count = end ; count >= 0 ; count --)
+            {
+                printf("%d ", previous[count]);
+            }
+            return;
+        }
+    }
+
+    // The node is not reachable
+    return -1;
+}
+
+
 int main(){
   char choice;
   int numberOfVertices, startVertex, endVertex;
