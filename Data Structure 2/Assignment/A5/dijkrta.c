@@ -357,7 +357,7 @@ void BFS( struct graph* Graph, int key)
 /* ========---- The min heap -----===============*/
 struct heap{
 };
-struct heap* createheap(int size);
+struct heap* createHeap(int size);
 // Creating a new heap
 void insertHeap(int vertex, int weight , struct heap* temp);
 // Inserting into the heap
@@ -469,6 +469,127 @@ void dijkrata( int start, int end, struct *graph Gph)
     return -1;
 }
 
+
+/*=========----- The min heap implementation started ---============*/
+struct heap{
+    int size;
+    // To store the total number of elements in the heap
+    int* value[];
+    // To store the values
+    int* positionMap[];
+    // The position map of the elements
+    int* inverseMap[];
+    // The inverse map of the elements
+};
+
+struct heap* createHeap(int size)
+{
+    struct heap* Heap = (struct heap*)malloc(sizeof(struct heap));
+    Heap->value = (int)malloc(sizeof(int)*size);
+    Heap->positionMap = (int)malloc(sizeof(int)*size);
+    Heap->inverseMap = (int)malloc(sizeof(int)*size);
+    Heap->size = size;
+    return Heap;
+}
+
+void insertHeap(int vertex, int weight, struct heap* temp)
+{
+    temp->value[vertex] = weight;
+    temp->positionMap[vertex] = temp->size;
+    temp->inverseMap[temp->size] = vertex;
+
+    swim(temp->size, temp);
+
+    temp->size++;
+    return;
+}
+
+void swim(int i, struct heap* temp)
+{
+    int p = (i-1)/2;
+    while(i>0 && less(i,p))
+    {
+        swap(i,p, temp);
+        i = p;
+        p = (i-1)/2;
+    }
+}
+
+void swap( int i, int j, struct heap* temp )
+{
+    temp->positionMap[temp->inverseMap[j]] = i;
+    temp->positionMap[temp->inverseMap[i]] = j;
+
+    int key = temp->inverseMap[i];
+    temp->inverseMap[i] = temp->inverseMap[j];
+    temp->inverseMap[j] = key;
+}
+
+void less(int i , int j , struct heap* temp)
+{
+    return temp->value[temp->inverseMap[i]] < temp->value[temp->inverseMap[j]];
+}
+
+void removeHeap( int vertex, struct heap* temp)
+{
+    int i = temp->positionMap[vertex];
+    temp->size =  temp->size - 1;
+
+    swap(i, temp->size, temp);
+    sink(i, temp);
+    swim(i, temp);
+
+    temp->value[vertex] = NULL;
+    temp->positionMap[vertex] = -1;
+    temp->inverseMap[temp->size] = -1;
+}
+
+void sink(int i , struct heap* temp)
+{
+    while(true)
+    {
+        int left = 2*i + 1;
+        int right = 2*i + 2;
+
+        int smallest = left;
+
+        if( right < temp->size && less(right, left, temp))
+            smallest = right;
+
+        if(left >= temp->size || less(i, smallest, temp))
+            break;
+
+        swap(smallest, i , temp);
+        i = smallest;
+    }
+}
+
+void updateHeap(int vertex, int value, struct heap* temp)
+{
+    int i = temp->positionMap[vertex];
+    temp->value[vertex] = value;
+
+    sink(i, temp);
+    swim(i, temp);
+}
+
+void decreaseKey(int vertex, int value, struct heap* temp)
+{
+    if(less(value, temp->value[vertex]))
+    {
+        temp->value[vertex] = value;
+        swim(temp->positionMap[vertex], temp);
+    }
+}
+
+void increaseKey(int vertex, int value, struct heap* temp)
+{
+    if(less(temp->value[vertex], value))
+    {
+        temp->value[vertex] = value;
+        sink(temp->positionMap[vertex], temp);
+    }
+}
 
 int main(){
   char choice;
