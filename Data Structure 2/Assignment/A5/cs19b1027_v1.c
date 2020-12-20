@@ -9,7 +9,7 @@ Name: Vibhanshu Jain
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include <limits.h>
 #define notvisited 0
 #define visited 1
 
@@ -156,23 +156,13 @@ struct graph* createGraph( int vertices )
     return Graph;
 }
 
-void new_edge( struct graph* Graph, int a, int b)
+void new_edge( struct graph* Graph, int a, int b, int weight)
 {
     // We need to sort the elements in the queue in ascending order
     // Adding a edge from a to b
     struct node* X = new_node(a);
     struct node* Y = new_node(b);
-
-    // Insert the element at correct position
-
-    //If both the elements inputed are equal, then we cannot create any edge here, but we may input them as the head of their adjacency list
-    if( a == b)
-    {
-        if(Graph->array[a].head == NULL)
-            Graph->array[a].head = X;
-
-        return;
-    }
+    Y->weight = weight;
 
 
     if( Graph->array[a].head == NULL)
@@ -383,6 +373,7 @@ int isEmptyHeap(struct heap* temp);
 
 struct heap* createHeap(int size)
 {
+    // Creating a min heap of size n ( The total number of vertices )
     struct heap* Heap = (struct heap*)malloc(sizeof(struct heap));
     Heap->value = (int*)malloc(sizeof(int)*size);
     Heap->positionMap = (int*)malloc(sizeof(int)*size);
@@ -391,6 +382,9 @@ struct heap* createHeap(int size)
     return Heap;
 }
 
+/* Inserting a value into the min heap. We will be
+    need to add the corresponding values to the position map and inverse map
+*/
 void insertHeap(int vertex, int weight, struct heap* temp)
 {
     temp->value[vertex] = weight;
@@ -403,6 +397,9 @@ void insertHeap(int vertex, int weight, struct heap* temp)
     return;
 }
 
+/*  Swims up the node i until the heap conditions are satisfied.
+    The loop will break once it reaches the correct node.
+*/
 void swim(int i, struct heap* temp)
 {
     int p = (i-1)/2;
@@ -414,6 +411,7 @@ void swim(int i, struct heap* temp)
     }
 }
 
+/* Swapping the values stored in position map and inverse map*/
 void swap( int i, int j, struct heap* temp )
 {
     temp->positionMap[temp->inverseMap[j]] = i;
@@ -424,11 +422,15 @@ void swap( int i, int j, struct heap* temp )
     temp->inverseMap[j] = key;
 }
 
+/* Compare between the two values stored */
 int less(int i , int j , struct heap* temp)
 {
     return temp->value[temp->inverseMap[i]] < temp->value[temp->inverseMap[j]];
 }
 
+/* Removing the element from a heap, also note that the vertex must be present
+   in the heap intially.
+*/
 void removeHeap( int vertex, struct heap* temp)
 {
     int i = temp->positionMap[vertex];
@@ -443,6 +445,8 @@ void removeHeap( int vertex, struct heap* temp)
     temp->inverseMap[temp->size] = -1;
 }
 
+
+/* Sinks the node at index i by swapping itself with the smallest of the left or the right child node. */
 void sink(int i , struct heap* temp)
 {
     while(1)
@@ -465,6 +469,10 @@ void sink(int i , struct heap* temp)
     return;
 }
 
+/* Updating the value of a vertex in the heap. The vertex must exits for this operation.
+   Also, note we need to do the sink and the swim operations in order to maintain the
+   heap property.
+*/
 void updateHeap(int vertex, int value, struct heap* temp)
 {
     int i = temp->positionMap[vertex];
@@ -474,6 +482,7 @@ void updateHeap(int vertex, int value, struct heap* temp)
     swim(i, temp);
 }
 
+/* Decreasing the value to mainatiain the heap.*/
 void decreaseKey(int vertex, int value, struct heap* temp)
 {
     if(less(value, temp->value[vertex], temp))
@@ -492,11 +501,13 @@ void increaseKey(int vertex, int value, struct heap* temp)
     }
 }
 
-int peekMininum(struct heap* temp)
+/*  Throwing the vertex with minimum value */
+int peekMinimum(struct heap* temp)
 {
     return(temp->positionMap[0]);
 }
 
+/* Removing the value with minimun value */
 int popMinimum(struct heap* temp)
 {
     int x = temp->positionMap[0];
@@ -504,14 +515,20 @@ int popMinimum(struct heap* temp)
     return x;
 }
 
+/* To check whether the heap is empty or not */
 int isEmptyHeap(struct heap* temp)
 {
     return( temp->size == 0);
 }
+
+int isPresent(int vertex, struct heap* temp)
+{
+    return temp->positionMap[vertex] != -1;
+}
 /* ======-------- Min heap ended  =============------*/
 
 
-void dijkrata(int start, int end, struct *graph Gph){
+void dijkrata(int start, int end, struct graph* Gph){
     // Checking whether the inputed endpoints are correct or not.
     if(start < 0 || start > Gph->num_vertex)
         return;
@@ -522,7 +539,7 @@ void dijkrata(int start, int end, struct *graph Gph){
     int  n = Gph->num_vertex;
 
     // Creating the heap of size of vertiecs
-    struct heap alpha = createheap(n);
+    struct heap* alpha = createHeap(n);
 
     // Insert the first vertex
     insertHeap(start , 0, alpha);
@@ -542,7 +559,7 @@ void dijkrata(int start, int end, struct *graph Gph){
     // The distance of first element is 0
     distance[start] = 0;
 
-    while( !isEmptyHeap())
+    while( !isEmptyHeap(alpha))
     {
         // Run this while loop until the heaps is empty
 
@@ -557,7 +574,7 @@ void dijkrata(int start, int end, struct *graph Gph){
             continue;
         // The distance already founded is minimum , then we don't needed to go inside the loop
 
-        struct node* temp = Gph->array[nodeID];
+        struct node* temp = Gph->array[nodeID].head;
         while( temp->next != NULL)
         {
             // If the node is already visited then continue the loop without going into the loop;
@@ -574,12 +591,12 @@ void dijkrata(int start, int end, struct *graph Gph){
                 distance[temp->next->data] = newWeight;
                 // Changing the weight
 
-                if(!isPresent(temp->next->data), alpha)
+                if(!isPresent(temp->next->data, alpha))
                     insertHeap(temp->next->data, newWeight, alpha );
                 // Adding the vertex to the heap if it's not present here
 
                 else
-                    decreasekey(temp->next->data, newWeight, alpha);
+                    decreaseKey(temp->next->data, newWeight, alpha);
 
                 // If the vertex is present previously in the heap
             }
@@ -606,7 +623,7 @@ void dijkrata(int start, int end, struct *graph Gph){
     }
 
     // The node is not reachable
-    return -1;
+    return;
 }
 
 
@@ -615,7 +632,7 @@ void dijkrata(int start, int end, struct *graph Gph){
 
 int main(){
   char choice;
-  int numberOfVertices, startVertex, endVertex;
+  int numberOfVertices, startVertex, endVertex, weight;
 
   // Fetching number of vertices
   scanf("%d",&numberOfVertices);
@@ -626,17 +643,17 @@ int main(){
      if(choice == 'N'){
        char delimiter;
        scanf("%d", &startVertex);
-       while(scanf("%d%c", &endVertex, &delimiter)){
+       while(scanf("%d%d%c", &endVertex, &weight, &delimiter)){
 
 	 // Add the edge (startVertex, endVertex) to your graph here.
-       new_edge(New, endVertex,startVertex);
+       new_edge(New, endVertex,startVertex, weight);
 	 if(delimiter == '\n') break; // Detecting end of line.
        }
      }
-     else if(choice == 'B'){
+     else if(choice == 'D'){
        scanf("%d",&startVertex);
-       // Call BFS on your graph starting from startVertex here.
-       BFS(New, startVertex);
+       // Call Dijkstra Algorithm on your graph starting from startVertex here.
+       dijkrata(startVertex, endVertex, New);
      }
    }
    return(0);
