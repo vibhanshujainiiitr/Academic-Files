@@ -2,6 +2,7 @@
 Name: Vibhanshu Jain
 Roll No: CS19B1027
 */
+#include <bits/types/time_t.h>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
@@ -65,37 +66,13 @@ int main(){
         exit(0);
     }
 
-    int process[time], min=0,next_process;
+    int max_deadline, current_process = 0, min_deadline, process[n];
+    bool is_ready[n];
 
-    /* Running the scheduling */
-    for(int x=0; x<time; x++){
-        min = INT_MAX;
-        // The min to be the maximum integer value
-
-        for(int y=0; y<n;y++){
-            if(A[y].remaining_time > 0){
-                if(min > A[y].p){
-                    min = A[y].p;
-                    next_process = y;
-                    cout<<"The process is preemted"<<y;
-                }
-            }
-        }
-
-
-        if(A[next_process].remaining_time > 0){
-            process[x] = next_process;
-            A[next_process].remaining_time -= -1;
-        }
-
-        for(int z=0; z<n;z++){
-            if((x+1)%A[z].p == 0){
-                A[z].remaining_time = A[z].i;
-                next_process = z;
-            }
-        }
+    /* Making each process ready */
+    for(int x=0; x<n; x++){
+        is_ready[x] = true;
     }
-
 
     // The process completed excuting and now we can 
     // calculate the other varibales
