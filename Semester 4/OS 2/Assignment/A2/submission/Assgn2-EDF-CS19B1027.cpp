@@ -98,10 +98,9 @@ int main(){
             waiting_queue.pop();
         }
 
-
+        
 
         /* Till here we are just adding the processes in a waiting queue. Now we need to check what is happening with ready queue */
-
-        /* Fo */
+        
     }
 }
