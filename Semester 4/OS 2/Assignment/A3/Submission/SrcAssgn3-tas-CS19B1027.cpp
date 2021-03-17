@@ -113,7 +113,7 @@ int main(){
   input.close();
 
 
-  default_random_engine generator;
+  default_random_engine randomNumber;
 
   exponential_distribution<double> csTimeDistribution((double)1 / lambda1);
   exponential_distribution<double> rmTimeDistribution((double)1 / lambda2);
@@ -124,7 +124,7 @@ int main(){
   log_file.open("TAS-Log.txt");
 
   for(int i=0; i<k; i++){
-    th[i] = thread(testCS, i, k, ref(csTimeDistribution), ref(rmTimeDistribution), ref(generator));
+    th[i] = thread(testCS, i, k, ref(csTimeDistribution), ref(rmTimeDistribution), ref(randomNumber));
   }
 
   for(int i=0; i<n; i++){
