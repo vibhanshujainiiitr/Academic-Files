@@ -9,6 +9,7 @@ Roll No: CS19B1027
 #include <math.h>
 #include <numeric>
 #include <limits.h>
+#include <fstream>
 
 using namespace std;
 /* 
@@ -19,7 +20,7 @@ class process{
         int i;  // ID
         int t;  // Processing time
         int p;  // Period
-        int k;  // Number of time it repeats
+        int start_time;  // Number of time it repeats
         int remaining_time;
 };
 
@@ -30,8 +31,8 @@ int main(){
     ofstream output_log, output_stat;
 
     input.open("inp-params.txt");
-    output_log.open("EDF-Log.txt");
-    output_stat.open("EDF-Stats.txt");
+    output_log.open("RMS-Log.txt");
+    output_stat.open("RMS-Stats.txt");
 
     int n;
     // The total number of process
@@ -41,25 +42,34 @@ int main(){
     /*
     Creating an array of process 
     */
-    process A[n];
+    int total_process=0;
+    process A[INT_MAX];
 
 
     /* Taking the input for each process */
+    int max_time_period=-1;
     for(int x=0; x<n;x++)
-    {
-        input>>A[x].i>>A[x].t>>A[x].p>>A[x].k;
-        // Adding the values of the process
+    {   
+        int i,t,p,k;
+        input>>i>>t>>p>>k;
+        if(max_time_period <t)  
+            max_time_period = t;
+        for(int i=0;i<k;i++){
+            int process_number = ++total_process;
+            A[process_number].i = i;
+            A[process_number].t = t;
+            A[process_number].p = p;
+            A[process_number].remaining_time = p;
+            A[process_number].start_time = i*p;
+            // Adding the values of the process
+        }
+        
     }
 
 
     /* Calculating the total time to run the execution 
     */  
-    int time;
-    for(int x=0; x<n;x++){
-        if(time < A[x].p*A[x].k)
-            time = A[x].p*A[x].k;
-    }
-
+    int time=n*max_time_period;
 
     /*
         The CPU Utilization during the process 
@@ -74,7 +84,7 @@ int main(){
         exit(0);
     }
 
-    int process[time], min=0,next_process;
+    int process[time], min=0,next_process, waiting_time=0;
 
     /* Running the scheduling */
     for(int x=0; x<time; x++){
@@ -82,11 +92,12 @@ int main(){
         // The min to be the maximum integer value
 
         for(int y=0; y<n;y++){
-            if(A[y].remaining_time > 0){
+            if(A[y].remaining_time > 0 && A[y].start_time <= x){
+                // Run this part only when the process and has arrived
                 if(min > A[y].p){
                     min = A[y].p;
                     next_process = y;
-                    output_log<<"The process is preemted"<<y;
+                    output_log<<"The process is preemted"<<y<<endl;
                 }
             }
         }
@@ -104,6 +115,7 @@ int main(){
             }
         }
     }
+
 
 
     // The process completed excuting and now we can 
