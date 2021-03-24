@@ -54,6 +54,7 @@ public:
 		int i;
 		vector<double>values;
 		vector<char>operation;
+		// Two vectors to store the elements
 
 		for (int i = 0; i < input.size(); i++) {
 
@@ -78,11 +79,11 @@ public:
 
 			else {
 
+				// Calculating while the precedence of the operator inside is more than the input operator
 				while (!operation.empty() && precedence(operation.back()) >= precedence(input[i])) {
 					double value_2 = values.back();
 					values.pop_back();
-					// Check the equivalent of pop
-
+		
 					double value_1 = values.back();
 					values.pop_back();
 
@@ -98,9 +99,9 @@ public:
 		}
 
 		while (!operation.empty()) {
+			// Calculating while there are opertors in the vector
 			double value_2 = values.back();
 			values.pop_back();
-			// Check the equivalent of pop
 
 			double value_1 = values.back();
 			values.pop_back();
@@ -111,11 +112,13 @@ public:
 			values.push_back(calculation(value_1, value_2, op));
 		}
 
+		// This will be the result of the calculations
 		return values.back();
 	};
 
 	void print() {
-		cout << eval();
+		// Printing the result
+		cout << eval()<<endl;
 	};
 };
 int main() {
