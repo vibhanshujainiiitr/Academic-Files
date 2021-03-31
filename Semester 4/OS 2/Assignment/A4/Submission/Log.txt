@@ -1,23 +1,23 @@
-1th customer acccess request at 14:09:19
-1th customer given access at 14:09:19
-2th customer acccess request at 14:09:20
-2th customer given access at 14:09:22
-3th customer acccess request at 14:09:22
-3th customer given access at 14:09:27
-4th customer acccess request at 14:09:49
-4th customer given access at 14:09:49
-5th customer acccess request at 14:09:49
-6th customer acccess request at 14:09:49
-7th customer acccess request at 14:09:49
-5th customer given access at 14:09:52
-7th customer given access at 14:09:52
-6th customer given access at 14:09:52
-8th customer acccess request at 14:10:00
-9th customer acccess request at 14:10:07
-8th customer given access at 14:10:17
-9th customer given access at 14:10:17
-10th customer acccess request at 14:10:19
-10th customer given access at 14:10:19
+1th customer acccess request at 14:24:09
+1th customer given access at 14:24:09
+2th customer acccess request at 14:24:10
+2th customer given access at 14:24:12
+3th customer acccess request at 14:24:12
+3th customer given access at 14:24:17
+4th customer acccess request at 14:24:39
+4th customer given access at 14:24:39
+5th customer acccess request at 14:24:39
+6th customer acccess request at 14:24:39
+7th customer acccess request at 14:24:39
+5th customer given access at 14:24:42
+6th customer given access at 14:24:42
+8th customer acccess request at 14:24:50
+9th customer acccess request at 14:24:57
+7th customer given access at 14:25:00
+8th customer given access at 14:25:00
+9th customer given access at 14:25:07
+10th customer acccess request at 14:25:09
+10th customer given access at 14:25:09
 
 
-Average waiting time: 4.3
+Average waiting time: 5.4

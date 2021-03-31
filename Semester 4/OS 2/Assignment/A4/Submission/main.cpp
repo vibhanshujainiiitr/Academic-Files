@@ -23,15 +23,21 @@ using namespace std;
 /* File output */
 ofstream log_file;
 
+/* Global variables */
 int n, x, k=0;
 float lambda, r, t;
 
-default_random_engine randomNumber;
-/* Some global variables */
 int eating = 0, waiting = 0 ;
 // eating and waiting keep track of the number of threads sitting at the table and waiting respectively.
 
-sem_t mutex, block, lock;
+/* Default random engine */
+default_random_engine randomNumber;
+
+
+/* Semaphores */
+sem_t mutex, block;
+
+/* Boolean must wait */
 bool must_wait = 0;
 
 /* Time calculations */
@@ -50,17 +56,24 @@ string time_format(time_t present_time)
 }
 
 
+/* The main algorithm implementation */
 void algorithm(int i) 
   { 
-    string enter,start,end;
-		
+    string enter,start;
+		/* String for printing time */
+
+    /* Exponential Distribution for eating time */
     exponential_distribution<double> eatingTime(t);
   
 
+    /* The enter time for */
     time_t enterTime = time(NULL);
     enter = time_format(enterTime);
+    
     // Entering the critical section
     log_file<<i+1<<"th customer acccess request at "<<enter<<"\n";
+    
+    /* Wait call for the semaphore mutex */
     sem_wait(&mutex);
     
     if( must_wait == 1 || eating+1 > x)
@@ -100,7 +113,7 @@ void algorithm(int i)
 
     time_t alpha = eatingStartTime - enterTime;
     waiting_time = waiting_time + alpha;
-
+    /* Waiting time calculations */
 
     if(eating == 0)
     {
@@ -127,9 +140,9 @@ int main(){
   input>>n>>x>>lambda>>r>>t;
   
   input.close();
-  
 
 
+  /* Exponential Distribution for coming time */
   exponential_distribution<double> comingTime(lambda);
   
    
@@ -140,9 +153,9 @@ int main(){
 
   // Initilizing the semaphores
   sem_init(&mutex,0,1);
-  sem_init(&lock,0,1);
   sem_init(&block,0,0);
-  // cout<<"\n This is \n";
+
+
   // Checking whether the semaphore created successfully or not
   if(&mutex == SEM_FAILED)
   {
@@ -157,24 +170,23 @@ int main(){
   }
 
   // Creating threads and passing the value of current customer
-	////////
 
 	int came = 0;
 	int maxValue = r*x;
 	while(came < n)
-	{
-	
-	int s = rand()%maxValue + 1;
-	if(came+s > n)
-		s = n-came;
-		
-  for(int i=came; i<came+s; i++){
-    th[i] = thread(algorithm,i);
-	}
+	{	
+	  int s = rand()%maxValue + 1;
+	  if(came+s > n)
+		    s = n-came;
 
-	came = s + came;
+    for(int i=came; i<came+s; i++)
+    {
+      th[i] = thread(algorithm,i);
+	  }
+
+	  came = s + came;
 		sleep(comingTime(randomNumber));
-	 
+    
   }
 
   // Joining the threads created
