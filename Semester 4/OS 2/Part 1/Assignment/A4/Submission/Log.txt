@@ -1,0 +1,23 @@
+1th customer acccess request at 17:51:30
+1th customer given access at 17:51:30
+2th customer acccess request at 17:51:31
+2th customer given access at 17:51:33
+3th customer acccess request at 17:51:33
+3th customer given access at 17:51:38
+4th customer acccess request at 17:52:00
+4th customer given access at 17:52:00
+5th customer acccess request at 17:52:00
+6th customer acccess request at 17:52:00
+7th customer acccess request at 17:52:00
+5th customer given access at 17:52:03
+6th customer given access at 17:52:03
+8th customer acccess request at 17:52:11
+7th customer given access at 17:52:16
+9th customer acccess request at 17:52:18
+8th customer given access at 17:52:21
+9th customer given access at 17:52:28
+10th customer acccess request at 17:52:30
+10th customer given access at 17:52:30
+
+
+Average waiting time: 4.9
