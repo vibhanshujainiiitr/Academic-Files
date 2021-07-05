@@ -1,0 +1,84 @@
+vibhanshu@vibhanshu:~/assgn$ pgrep sample
+6905
+7007
+vibhanshu@vibhanshu:~/assgn$ 
+
+
+Now let's collect the pmap of both the processes
+
+vibhanshu@vibhanshu:~/assgn$ pmap 6905
+6905:   ./sample
+0000560307712000      4K r---- sample
+0000560307713000      4K r-x-- sample
+0000560307714000      4K r---- sample
+0000560307715000      4K r---- sample
+0000560307716000      4K rw--- sample
+0000560308381000    132K rw---   [ anon ]
+00007f719872b000    148K r---- libc-2.31.so
+00007f7198750000   1504K r-x-- libc-2.31.so
+00007f71988c8000    296K r---- libc-2.31.so
+00007f7198912000      4K ----- libc-2.31.so
+00007f7198913000     12K r---- libc-2.31.so
+00007f7198916000     12K rw--- libc-2.31.so
+00007f7198919000     24K rw---   [ anon ]
+00007f7198926000      4K r---- ld-2.31.so
+00007f7198927000    140K r-x-- ld-2.31.so
+00007f719894a000     32K r---- ld-2.31.so
+00007f7198953000      4K r---- ld-2.31.so
+00007f7198954000      4K rw--- ld-2.31.so
+00007f7198955000      4K rw---   [ anon ]
+00007ffe9f6a3000    132K rw---   [ stack ]
+00007ffe9f7ae000     12K r----   [ anon ]
+00007ffe9f7b1000      4K r-x--   [ anon ]
+ffffffffff600000      4K --x--   [ anon ]
+ total             2492K
+
+
+vibhanshu@vibhanshu:~/assgn$ pmap 7007
+7007:   ./sample
+00005566c9de7000      4K r---- sample
+00005566c9de8000      4K r-x-- sample
+00005566c9de9000      4K r---- sample
+00005566c9dea000      4K r---- sample
+00005566c9deb000      4K rw--- sample
+00005566caceb000    132K rw---   [ anon ]
+00007f8917136000    148K r---- libc-2.31.so
+00007f891715b000   1504K r-x-- libc-2.31.so
+00007f89172d3000    296K r---- libc-2.31.so
+00007f891731d000      4K ----- libc-2.31.so
+00007f891731e000     12K r---- libc-2.31.so
+00007f8917321000     12K rw--- libc-2.31.so
+00007f8917324000     24K rw---   [ anon ]
+00007f8917331000      4K r---- ld-2.31.so
+00007f8917332000    140K r-x-- ld-2.31.so
+00007f8917355000     32K r---- ld-2.31.so
+00007f891735e000      4K r---- ld-2.31.so
+00007f891735f000      4K rw--- ld-2.31.so
+00007f8917360000      4K rw---   [ anon ]
+00007ffd29b9f000    132K rw---   [ stack ]
+00007ffd29bdc000     12K r----   [ anon ]
+00007ffd29bdf000      4K r-x--   [ anon ]
+ffffffffff600000      4K --x--   [ anon ]
+ total             2492K
+
+
+
+vibhanshu@vibhanshu:~/assgn$ sudo su
+[sudo] password for vibhanshu: 
+root@vibhanshu:/home/vibhanshu/assgn# 
+root@vibhanshu:/home/vibhanshu/assgn# ./pagemap 6905 0x560307713189
+Big endian? 0
+Vaddr: 0x560307713189, Page_size: 4096, Entry_size: 8
+Reading /proc/6905/pagemap at 0x2b0183b898
+[0]0x5c [1]0xf4 [2]0x0 [3]0x0 [4]0x0 [5]0x0 [6]0x80 [7]0xa0 
+Result: 0xa08000000000f45c
+PFN: 0xf45c
+root@vibhanshu:/home/vibhanshu/assgn# ./pagemap 7007 0x5566c9de8189
+Big endian? 0
+Vaddr: 0x5566c9de8189, Page_size: 4096, Entry_size: 8
+Reading /proc/7007/pagemap at 0x2ab364ef40
+[0]0x5c [1]0xf4 [2]0x0 [3]0x0 [4]0x0 [5]0x0 [6]0x80 [7]0xa0 
+Result: 0xa08000000000f45c
+PFN: 0xf45c
+
+
