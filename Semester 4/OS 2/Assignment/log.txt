@@ -1,0 +1,64 @@
+1th Reader ask access request at 13:15:03
+5th Reader ask access request at 13:15:03
+3th Reader ask access request at 13:15:03
+4th Writer access request at 13:15:03
+2th Reader ask access request at 13:15:03
+1th Writer access request at 13:15:03
+1th Reader given access at 13:15:03, there are 4 readers currently inside.
+2th Writer access request at 13:15:03
+5th Reader given access at 13:15:03, there are 4 readers currently inside.
+3th Writer access request at 13:15:03
+4th Reader ask access request at 13:15:03
+4th Reader given access at 13:15:03, there are 3 readers currently inside.
+5th Writer access request at 13:15:03
+2th Reader given access at 13:15:03, there are 3 readers currently inside.
+1th Reader exit at 13:15:03
+1th Reader ask access request at 13:15:03
+1th Reader given access at 13:15:03, there are 4 readers currently inside.
+4th Reader exit at 13:15:03
+4th Reader ask access request at 13:15:03
+5th Reader exit at 13:15:03
+3th Reader given access at 13:15:03, there are 4 readers currently inside.
+4th Reader given access at 13:15:03, there are 4 readers currently inside.
+5th Reader ask access request at 13:15:03
+5th Reader given access at 13:15:03, there are 4 readers currently inside.
+2th Reader exit at 13:15:03
+2th Reader ask access request at 13:15:03
+2th Reader given access at 13:15:03, there are 5 readers currently inside.
+1th Reader exit at 13:15:03
+3th Reader exit at 13:15:03
+3th Reader ask access request at 13:15:03
+3th Reader given access at 13:15:03, there are 3 readers currently inside.
+4th Reader exit at 13:15:03
+5th Reader exit at 13:15:03
+2th Reader exit at 13:15:03
+3th Reader exit at 13:15:03
+4th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+4th Writer exit at 13:15:03
+4th Writer access request at 13:15:03
+1th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+1th Writer exit at 13:15:03
+1th Writer access request at 13:15:03
+1th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+1th Writer exit at 13:15:03
+3th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+3th Writer exit at 13:15:03
+3th Writer access request at 13:15:03
+5th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+5th Writer exit at 13:15:03
+5th Writer access request at 13:15:03
+5th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+5th Writer exit at 13:15:03
+2th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+2th Writer exit at 13:15:03
+3th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+2th Writer access request at 13:15:03
+3th Writer exit at 13:15:03
+4th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+4th Writer exit at 13:15:03
+2th -------------------  Writer given access at 13:15:03, there are 0 readers currently inside.
+2th Writer exit at 13:15:03
+
+
+Time taken 2940
+
