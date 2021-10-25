@@ -1,0 +1,209 @@
+In the updated we included some new variable.
+
+The output of the updated code. 
+    &global=0x55c3d649a010 &local=0x7ffccea612e4 &main=0x55c3d64971c9 
+    pid: 2109 
+    &global_unint=0x55c3d649a018 &constant_global_max=0x55c3d6498008  &constant_local_max=0x7ffccea612e8 &heap_variable=0x55c3d74062a0 
+
+    Here the process ID is 2109. 
+
+Now let's find the size and starting and ending address spaces.
+We are checking the size of the code, data, stack from VmExe, VmData and VmStk respectively from the results of the /proc/pid/status. Also we are checking the size of the heap by using the difference between the starting and ending address of the heap in the file /proc/pid/maps. Here pid is the process ID.
+output:
+
+    code:   
+        Starting address: 55c3d64971c9
+        Size: 8kB
+    heap:
+        Starting address: 55c3d7406000
+        Ending address: 55c3d7427000 
+        Size: 132kB
+    stack:
+        Starting address:7ffccea41000
+        Ending address:7ffccea62000
+        Size: 132kB
+    data: 
+        Starting Address: 55c3d649a018
+        Size: 180kB
+
+
+Physical Address:
+    We are checking it using the utility function pagemap.c
+    The code used to get this result:
+         `./pagemap 2109 55c3d649a010` ( here we need to replace the Virtual address)
+    **Here result is the Physical address and PFN is the page frame Number.
+
+    global: 
+        Vaddr: 0x55c3d649a010, Page_size: 4096, Entry_size: 8
+        Result: 0x818000000003046d
+        PFN: 0x3046d
+    
+    local:
+        Vaddr: 0x7ffccea612e4, Page_size: 4096, Entry_size: 8
+        Result: 0x81800000000268f5
+        PFN: 0x268f5
+    main: 
+        Vaddr: 0x55c3d64971c9, Page_size: 4096, Entry_size: 8
+        Result: 0xa1800000000264f0
+        PFN: 0x264f0
+        
+Page fault:
+    We are checking the page using the code `ps -o min_flt,maj_flt 2109`, where 2109 is the process ID for this process
+
+    Minor Page Fault: 76
+    Major Page Fault: 0
+
+
+
+
+===================================================================================== 
+
+outputs:
+
+
+    pmap: 
+        vibhanshu@vibhanshu:~$ pmap 2109
+        2109:   ./sample2
+        000055c3d6496000      4K r---- sample2
+        000055c3d6497000      4K r-x-- sample2
+        000055c3d6498000      4K r---- sample2
+        000055c3d6499000      4K r---- sample2
+        000055c3d649a000      4K rw--- sample2
+        000055c3d7406000    132K rw---   [ anon ]
+        00007f0193dbb000    148K r---- libc-2.31.so
+        00007f0193de0000   1504K r-x-- libc-2.31.so
+        00007f0193f58000    296K r---- libc-2.31.so
+        00007f0193fa2000      4K ----- libc-2.31.so
+        00007f0193fa3000     12K r---- libc-2.31.so
+        00007f0193fa6000     12K rw--- libc-2.31.so
+        00007f0193fa9000     24K rw---   [ anon ]
+        00007f0193fb6000      4K r---- ld-2.31.so
+        00007f0193fb7000    140K r-x-- ld-2.31.so
+        00007f0193fda000     32K r---- ld-2.31.so
+        00007f0193fe3000      4K r---- ld-2.31.so
+        00007f0193fe4000      4K rw--- ld-2.31.so
+        00007f0193fe5000      4K rw---   [ anon ]
+        00007ffccea41000    132K rw---   [ stack ]
+        00007ffccebfa000     12K r----   [ anon ]
+        00007ffccebfd000      4K r-x--   [ anon ]
+        ffffffffff600000      4K --x--   [ anon ]
+        total             2492K
+    
+    pagemap:   
+        global:
+            vibhanshu@vibhanshu:~/assgn$ sudo su
+            [sudo] password for vibhanshu: 
+            root@vibhanshu:/home/vibhanshu/assgn# ./pagemap 2109 55c3d649a010
+            Big endian? 0
+            Vaddr: 0x55c3d649a010, Page_size: 4096, Entry_size: 8
+            Reading /proc/2109/pagemap at 0x2ae1eb24d0
+            [0]0x6d [1]0x4 [2]0x3 [3]0x0 [4]0x0 [5]0x0 [6]0x80 [7]0x81 
+            Result: 0x818000000003046d
+            PFN: 0x3046d
+
+        local:
+            root@vibhanshu:/home/vibhanshu/assgn# ./pagemap 2109 7ffccea612e4
+            Big endian? 0
+            Vaddr: 0x7ffccea612e4, Page_size: 4096, Entry_size: 8
+            Reading /proc/2109/pagemap at 0x3ffe675308
+            [0]0xf5 [1]0x68 [2]0x2 [3]0x0 [4]0x0 [5]0x0 [6]0x80 [7]0x81 
+            Result: 0x81800000000268f5
+            PFN: 0x268f5
+
+        main:
+            root@vibhanshu:/home/vibhanshu/assgn# ./pagemap 2109 55c3d64971c9
+            Big endian? 0
+            Vaddr: 0x55c3d64971c9, Page_size: 4096, Entry_size: 8
+            Reading /proc/2109/pagemap at 0x2ae1eb24b8
+            [0]0xf0 [1]0x64 [2]0x2 [3]0x0 [4]0x0 [5]0x0 [6]0x80 [7]0xa1 
+            Result: 0xa1800000000264f0
+            PFN: 0x264f0
+
+        page fault:
+            vibhanshu@vibhanshu:~/assgn$ ps -o min_flt,maj_flt 2109
+             MINFL  MAJFL
+                76      0
+
+    maps:
+        vibhanshu@vibhanshu:~/assgn$ cat /proc/2109/maps
+        55c3d6496000-55c3d6497000 r--p 00000000 08:03 396672                     /home/vibhanshu/assgn/sample2
+        55c3d6497000-55c3d6498000 r-xp 00001000 08:03 396672                     /home/vibhanshu/assgn/sample2
+        55c3d6498000-55c3d6499000 r--p 00002000 08:03 396672                     /home/vibhanshu/assgn/sample2
+        55c3d6499000-55c3d649a000 r--p 00002000 08:03 396672                     /home/vibhanshu/assgn/sample2
+        55c3d649a000-55c3d649b000 rw-p 00003000 08:03 396672                     /home/vibhanshu/assgn/sample2
+        55c3d7406000-55c3d7427000 rw-p 00000000 00:00 0                          [heap]
+        7f0193dbb000-7f0193de0000 r--p 00000000 08:03 9254                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+        7f0193de0000-7f0193f58000 r-xp 00025000 08:03 9254                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+        7f0193f58000-7f0193fa2000 r--p 0019d000 08:03 9254                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+        7f0193fa2000-7f0193fa3000 ---p 001e7000 08:03 9254                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+        7f0193fa3000-7f0193fa6000 r--p 001e7000 08:03 9254                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+        7f0193fa6000-7f0193fa9000 rw-p 001ea000 08:03 9254                       /usr/lib/x86_64-linux-gnu/libc-2.31.so
+        7f0193fa9000-7f0193faf000 rw-p 00000000 00:00 0 
+        7f0193fb6000-7f0193fb7000 r--p 00000000 08:03 9223                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+        7f0193fb7000-7f0193fda000 r-xp 00001000 08:03 9223                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+        7f0193fda000-7f0193fe2000 r--p 00024000 08:03 9223                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+        7f0193fe3000-7f0193fe4000 r--p 0002c000 08:03 9223                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+        7f0193fe4000-7f0193fe5000 rw-p 0002d000 08:03 9223                       /usr/lib/x86_64-linux-gnu/ld-2.31.so
+        7f0193fe5000-7f0193fe6000 rw-p 00000000 00:00 0 
+        7ffccea41000-7ffccea62000 rw-p 00000000 00:00 0                          [stack]
+        7ffccebfa000-7ffccebfd000 r--p 00000000 00:00 0                          [vvar]
+        7ffccebfd000-7ffccebfe000 r-xp 00000000 00:00 0                          [vdso]
+        ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+    status:
+        vibhanshu@vibhanshu:~/assgn$ cat /proc/2109/status
+        Name:	sample2
+        Umask:	0002
+        State:	S (sleeping)
+        Tgid:	2109
+        Ngid:	0
+        Pid:	2109
+        PPid:	1134
+        TracerPid:	0
+        Uid:	1000	1000	1000	1000
+        Gid:	1000	1000	1000	1000
+        FDSize:	256
+        Groups:	4 24 27 30 46 116 1000 
+        NStgid:	2109
+        NSpid:	2109
+        NSpgid:	2109
+        NSsid:	1134
+        VmPeak:	    2488 kB
+        VmSize:	    2488 kB
+        VmLck:	       0 kB
+        VmPin:	       0 kB
+        VmHWM:	     588 kB
+        VmRSS:	     588 kB
+        RssAnon:	      64 kB
+        RssFile:	     524 kB
+        RssShmem:	       0 kB
+        VmData:	     180 kB
+        VmStk:	     132 kB
+        VmExe:	       8 kB
+        VmLib:	    1644 kB
+        VmPTE:	      44 kB
+        VmSwap:	       0 kB
+        HugetlbPages:	       0 kB
+        CoreDumping:	0
+        THP_enabled:	1
+        Threads:	1
+        SigQ:	0/3573
+        SigPnd:	0000000000000000
+        ShdPnd:	0000000000000000
+        SigBlk:	0000000000000000
+        SigIgn:	0000000000000000
+        SigCgt:	0000000000000000
+        CapInh:	0000000000000000
+        CapPrm:	0000000000000000
+        CapEff:	0000000000000000
+        CapBnd:	0000003fffffffff
+        CapAmb:	0000000000000000
+        NoNewPrivs:	0
+        Seccomp:	0
+        Speculation_Store_Bypass:	thread vulnerable
+        Cpus_allowed:	1
+        Cpus_allowed_list:	0
+        Mems_allowed:	00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001
+        Mems_allowed_list:	0
+        voluntary_ctxt_switches:	2
+        nonvoluntary_ctxt_switches:	6
