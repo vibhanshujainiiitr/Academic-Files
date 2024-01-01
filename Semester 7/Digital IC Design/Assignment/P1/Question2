@@ -1,0 +1,19 @@
+// Vibhanshu Jain
+// CS19B1027
+// HDL Assignment 1
+
+// Y = x0h0 + x1h1 + ... + x9h9
+
+// Question 2
+// Compute Y keeping in mind that no two different arithmetic operations will take place in same clock
+
+`timescale 1ns / 1ns
+
+module adder (input [3:0] x, input [3:0] h, output reg [3:0] y);
+
+always @ (posedge clk)
+begin
+    y = x[0] * h[0] + x[1] * h[1] + x[2] * h[2] + x[3] * h[3];
+end
+
+endmodule

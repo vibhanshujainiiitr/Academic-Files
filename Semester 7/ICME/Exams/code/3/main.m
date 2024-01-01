@@ -1,0 +1,1 @@
+model = createpde('structural','static-solid');

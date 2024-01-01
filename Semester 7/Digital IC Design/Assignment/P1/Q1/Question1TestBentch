@@ -1,0 +1,48 @@
+// Vibhanshu Jain
+// CS19B1027
+// HDL Assignment 1
+
+// Y = x0h0 + x1h1 + ... + x9h9
+
+`timescale 1ns / 1ns
+module Question1TestBentch();
+   
+   parameter M = 4; parameter N = 4;
+   reg clk;
+   reg [M-1:0]x0,x1,x2,x3,x4,x5,x6,x7,x8,x9;
+   reg [N-1:0]h0,h1,h2,h3,h4,h5,h6,h7,h8,h9;
+   wire [M+N+3:0]y;
+
+// module instantiation
+   Question1 #(.M(M),.N(N))u0(.clk(clk),.x0(x0),.x1(x1),.x2(x2),.x3(x3),.x4(x4),.x5(x5),.x6(x6),.x7(x7),.x8(x8),.x9(x9),
+                       .h0(h0),.h1(h1),.h2(h2),.h3(h3),.h4(h4),.h5(h5),.h6(h6),.h7(h7),.h8(h8),.h9(h9),.y(y));
+   integer i;
+
+   initial begin
+       clk = 1'b0;
+       h0 = 0; h1 = 1; h2 = 2; h3 = 3; h4 = 4; h5 = 5; h6 = 6; h7 = 7; h8 = 8; h9 = 9;
+       x0 = 0; x1 = 0; x2 =0; x3 = 0; x4 = 0; x5 = 0; x6 = 0; x7 = 0; x8 = 0; x9 = 0;
+       
+       for(i=0;i<10;i=i+1)
+         begin
+            //#2;
+            x0 = i; x1 = i; x2 = i; x3 = i; x4 = i;
+            #2;
+            x5 = i; x6 = i; x7 = i; x8 = i; x9 = i;
+            #2;
+         end
+
+        #5;
+        $finish;
+   end
+
+   initial begin
+     $dumpfile("dump.vcd");
+     $dumpvars(1);
+
+     $monitor("time=%d x0=%d x1=%d x2=%d x3=%d x4=%d x5=%d x6=%d x7=%d x8=%d x9=%d    h0=%d h1=%d h2=%d h3=%d h4=%d h5=%d h6=%d h7=%d h8=%d h9=%d y=%d",$time,x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,h0,h1,h2,h3,h4,h5,h6,h7,h8,h9,y);
+     
+   end
+   always #1 clk = ~clk;
+
+endmodule
